@@ -103,6 +103,7 @@ Using the job scheduling system PBS Pro, an optimization is launched by typing
 "msub serial.job" (for the chain job approach) or "msub unchained.job".
 Using the Slurm job scheduling system, the corresponding submission would read
 "sbatch serial.job" or "sbatch unchained.job".
+NOTE, that the headers of the example jobfiles in this package are for Slurm.
 It is possible to continue a terminated optimization by increasing the
 iteration number in nIter.txt and submitting "serial.job" ("unchained.job"),
 again. Also in the case of an interruption caused by technical problems,
