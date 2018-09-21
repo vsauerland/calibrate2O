@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH -o serial.out
+#SBATCH -t 00:03:00
+#SBATCH -J cmaes
+#SBATCH -N 1
+#SBATCH -c 1
+#SBATCH --mem=4gb
+#SBATCH -p focean
+#SBATCH --qos=focean
+
+maxIter=$(head -6 "nIter.txt" | tail -1 | awk '{print $1}')
+nIter=$(tail -1 "nIter.txt" | awk '{print $1}')
+
+./cmaes_2o $nIter nIter.txt > serial_$nIter.log
+
+if [ "$?" -eq 0 ]; then
+	if [ "$nIter" -lt "$maxIter" ]; then
+		sbatch parallel.rz.job
+	fi
+fi

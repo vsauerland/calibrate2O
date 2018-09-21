@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH -o parallel.out
+#SBATCH -t 00:30:00
+#SBATCH -J parallel
+#SBATCH -N 1
+#SBATCH -c 8
+#SBATCH --mem=4gb
+#SBATCH -p focean
+#SBATCH --qos=focean
+
+numSessions=$(head -5 nIter.txt | tail -1 | awk '{print $1}')
+maxIter=$(head -6 nIter.txt | tail -1 | awk '{print $1}')
+nIter=$(tail -1 nIter.txt | awk '{print $1}')
+for nSession in $(seq 1 $numSessions)
+do
+	./testCase "parameters_"$nIter"_"$nSession".txt" "fitness_"$nIter"_"$nSession".txt" > "parallel_"$nIter"_"$nSession".log" &
+done
+
+wait
+
+if [ "$nIter" -lt "$maxIter" ]; then 
+	sbatch serial.rz.job
+fi

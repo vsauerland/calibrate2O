@@ -41,7 +41,7 @@ Generating MO-CMAES executables:
 --------------------------------
 
 The package consists of the files
-* README        		// this file
+* README.md        		// this file
 * cmaes_2o.cpp     		// the main source of the MO-CMAES algorithm
 * individual.cpp/hpp	// class representing a single (1+1)-CMAES individual
 * population.cpp/hpp	// class representing a population of the MO-CMAES

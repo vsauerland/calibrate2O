@@ -1,0 +1,40 @@
+#!/bin/bash
+#SBATCH -o unchain.out
+#SBATCH -t 00:59:59
+#SBATCH -J unchain
+#SBATCH -N 1
+#SBATCH -c 8
+#SBATCH -p focean
+#SBATCH --mem=4gb
+#SBATCH --qos=focean
+
+startIter=$(tail -1 nIter.txt | awk '{print $1}')
+maxIter=$(head -6 nIter.txt | tail -1 | awk '{print $1}')
+numSessions=$(head -5 nIter.txt | tail -1 | awk '{print $1}')
+seed=$(head -7 nIter.txt | tail -1 | awk '{print $1}')
+for nIter in $(seq $startIter $maxIter)
+do
+	./cmaes_2o $nIter nIter.txt > "optimization_"$((nIter+1))".log" &
+	wait
+	if [ "$?" -ne 0 ]; then
+		exit
+	fi
+	for nSession in $(seq 1 $numSessions)
+	do
+		## wait until required parameter file for model simulation exists:
+		while ! [ -e "parameters_"$((nIter+1))"_"$nSession".txt" ]
+		do
+			sleep 1
+		done
+		./testCase "parameters_"$((nIter+1))"_"$nSession".txt" "fitness_"$((nIter+1))"_"$nSession".txt" > "simulation_"$((nIter+1))"_"$nSession".log" &
+	done
+	wait
+	## wait until required fitness files for next optimization step exist:
+	for nSession in $(seq 1 $numSessions)
+	do
+		while ! [ -e "fitness_"$((nIter+1))"_"$nSession".txt" ]
+		do
+			sleep 1
+		done
+	done
+done
