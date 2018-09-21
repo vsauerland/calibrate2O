@@ -1,6 +1,6 @@
 CCC = g++
 CC11 = gnu++0x
-EIGEN = -I /home/sunip173/eigen-eigen-36fd1ba04c12/Eigen/
+EIGEN = -I path/Eigen/ ## replace path by your own path to downloaded eigen package
 
 CCFLAGS = -O -std=$(CC11) 
 
