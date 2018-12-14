@@ -19,5 +19,5 @@ done
 wait
 
 if [ "$nIter" -lt "$maxIter" ]; then 
-	sbatch serial.rz.job
+	sbatch serial.job
 fi
